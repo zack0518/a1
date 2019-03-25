@@ -3,6 +3,7 @@ import json
 import re
 from collections import Counter as c
 from collections import Counter, defaultdict
+from collections import OrderedDict
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -64,9 +65,18 @@ def collectResult():
             for k,d in item.items():
                 c2[k].update(d)
                 c2[k].most_common()
+
+        print("##########Rank of grids##########")
         for k,v in c1.most_common():
             print(k, v)
-        print(c2)
+        print("##########Rank of hash tags##########")
+        # print rank of tags
+        sortedc2 = OrderedDict(sorted(c2.items(), key=lambda x: x[1]['total'], reverse=True))
+        for k in sortedc2:
+            if (len(sortedc2[k]) > 5):
+                print(k, list(sortedc2[k].most_common())[1:6])
+            else:
+                print(k, list(sortedc2[k].most_common())[1:len(sortedc2[k])-1])
 
 
 def parseCoordinates(line):
