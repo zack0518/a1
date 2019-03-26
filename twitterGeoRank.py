@@ -119,7 +119,7 @@ def countHashTagPerGrid(parsedJSON, grid):
             if tag in hashtagCounter[grid]:
                 hashtagCounter[grid][tag] += 1
             else:
-                hashtagCounter[grid][tag] = 0
+                hashtagCounter[grid][tag] = 1
 
 # match the closed bracket in a JSON string
 def closedBracketIndex(str):
