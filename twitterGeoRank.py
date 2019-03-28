@@ -4,6 +4,8 @@ import re
 from collections import Counter as c
 from collections import Counter, defaultdict
 from collections import OrderedDict
+import time
+import sys
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -12,7 +14,7 @@ size = comm.Get_size()
 grids = {}
 gridCounter = {}
 hashtagCounter = {}
-
+start_time = time.time()
 # Parse the gird info from the melbGrid.json
 def loadGrid():
 
@@ -32,7 +34,8 @@ def loadGrid():
 def twitterProcessor():
     lineNum = 0
     assignedLine = rank
-    with open("tinyTwitter.json") as f:
+    print(sys.argv[0])
+    with open(sys.argv[1]) as f:
         for line in f:
             if assignedLine == lineNum:
                 assignedLine = assignedLine + size
@@ -77,6 +80,10 @@ def collectResult():
                 print(k, list(sortedc2[k].most_common())[1:6])
             else:
                 print(k, list(sortedc2[k].most_common())[1:len(sortedc2[k])-1])
+
+        total = time.time() - start_time
+        minutes, seconds = divmod(total, 60)
+        print("time takes: %02d minutes and %02d seconds"%(minutes, seconds))
 
 
 def parseCoordinates(line):
